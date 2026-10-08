@@ -284,11 +284,13 @@ def download(url: str, dest: Path, check_md5: bool = True) -> Path:
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     md5 = hashlib.md5(usedforsecurity=False)
     with urllib.request.urlopen(req, timeout=120) as resp, open(dest, "wb") as out:
+        # "-latest" aliases redirect to a dated file or a mirror; the .md5 sits next to the file actually served.
+        final_url = resp.geturl() or url
         while chunk := resp.read(common.CHUNK):
             md5.update(chunk)
             out.write(chunk)
     if check_md5:
-        req = urllib.request.Request(url + ".md5", headers={"User-Agent": USER_AGENT})
+        req = urllib.request.Request(final_url + ".md5", headers={"User-Agent": USER_AGENT})
         with urllib.request.urlopen(req, timeout=60) as resp:
             expected = resp.read().decode().split()[0].lower()
         if expected != md5.hexdigest():

@@ -72,3 +72,37 @@ def test_prefilter_command(monkeypatch, tmp_path):
     businesses.prefilter(tmp_path / "a.osm.pbf", tmp_path / "b.osm.pbf", ["shop", "amenity"])
     cmd, check = calls[0]
     assert check is True and cmd[1] == "tags-filter" and cmd[-2:] == ["nwr/shop", "nwr/amenity"]
+
+
+def test_download_checks_md5_next_to_the_redirected_file(tmp_path, monkeypatch):
+    """The .md5 of a "-latest" alias is read from the final URL, not from the alias."""
+    import hashlib
+    import io
+
+    payload = b"pbf-bytes"
+    requested = []
+
+    class FakeResponse(io.BytesIO):
+        def __init__(self, body, url):
+            super().__init__(body)
+            self._url = url
+
+        def geturl(self):
+            return self._url
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+    def fake_urlopen(req, timeout=0):
+        requested.append(req.full_url)
+        if req.full_url.endswith(".md5"):
+            return FakeResponse((hashlib.md5(payload).hexdigest() + "  x\n").encode(), req.full_url)
+        return FakeResponse(payload, "https://mirror.example/dated-file.osm.pbf")
+
+    monkeypatch.setattr(businesses.urllib.request, "urlopen", fake_urlopen)
+    businesses.download("https://example/latest.osm.pbf", tmp_path / "x.pbf")
+    assert requested == ["https://example/latest.osm.pbf", "https://mirror.example/dated-file.osm.pbf.md5"]
+    assert (tmp_path / "x.pbf").read_bytes() == payload
