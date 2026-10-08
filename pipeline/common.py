@@ -59,8 +59,13 @@ def iso(ts: dt.datetime) -> str:
     return ts.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+# Bumped whenever the on-disk format of the packs changes, so clients that hold a pack of the same date replace it.
+# 1 = FTS5 index (unusable on Android), 2 = FTS4 index.
+FORMAT_REVISION = 2
+
+
 def date_version(ts: dt.datetime | None = None) -> str:
-    return (ts or utc_now()).strftime("%Y.%m.%d")
+    return (ts or utc_now()).strftime("%Y.%m.%d") + f".{FORMAT_REVISION}"
 
 
 def xz_compress(src: Path, dst: Path) -> dict:

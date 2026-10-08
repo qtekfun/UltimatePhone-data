@@ -191,9 +191,9 @@ def _write_pack(staging: sqlite3.Connection, out_db: Path, max_alt: int, meta: d
 
     db.executescript(
         """
-        CREATE VIRTUAL TABLE numbers_fts USING fts5(
-            name, content='numbers', content_rowid='rowid', tokenize='unicode61 remove_diacritics 2');
-        INSERT INTO numbers_fts(rowid, name) SELECT rowid, name FROM numbers;
+        -- FTS4, not FTS5: Android's platform SQLite has no fts5 module ("no such module: fts5" on a Pixel 8).
+        CREATE VIRTUAL TABLE numbers_fts USING fts4(content="numbers", name, tokenize=unicode61 "remove_diacritics=1");
+        INSERT INTO numbers_fts(numbers_fts) VALUES('rebuild');
         INSERT INTO numbers_fts(numbers_fts) VALUES('optimize');
         """
     )
