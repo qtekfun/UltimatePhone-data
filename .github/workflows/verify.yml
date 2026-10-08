@@ -1,0 +1,91 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: Verify
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  workflows:
+    name: workflows (syntax)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: python -m pip install "PyYAML==6.0.3"
+
+      # The build workflows only run on a schedule or by hand, so check them before they are merged:
+      # valid YAML, and every `run:` block (and every scripts/*.sh) must parse as bash.
+      - name: Validate workflow files and shell scripts
+        run: |
+          python3 - <<'PY'
+          import glob, subprocess, sys, tempfile, yaml
+          bad = 0
+          for path in sorted(glob.glob(".github/workflows/*.yml")):
+              doc = yaml.safe_load(open(path))
+              for name, job in (doc.get("jobs") or {}).items():
+                  for i, step in enumerate(job.get("steps") or []):
+                      run = step.get("run")
+                      if not run:
+                          continue
+                      with tempfile.NamedTemporaryFile("w", suffix=".sh", delete=False) as f:
+                          f.write(run)
+                      r = subprocess.run(["bash", "-n", f.name], capture_output=True, text=True)
+                      if r.returncode != 0:
+                          bad += 1
+                          print(f"{path} job {name} step {i} ({step.get('name')}): {r.stderr.strip()}")
+              print("ok", path)
+          for path in sorted(glob.glob("scripts/*.sh")):
+              r = subprocess.run(["bash", "-n", path], capture_output=True, text=True)
+              if r.returncode != 0:
+                  bad += 1
+                  print(f"{path}: {r.stderr.strip()}")
+              print("ok", path)
+          sys.exit(1 if bad else 0)
+          PY
+
+  checks:
+    name: lint, licence audit, tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipeline/requirements.txt
+
+      - name: Install dependencies
+        run: python -m pip install -r pipeline/requirements.txt
+
+      - name: YAML lint (sources, workflows)
+        run: yamllint -c .yamllint.yaml sources .github/workflows .yamllint.yaml
+
+      # Fails when a source card lacks a licence or a redistribution policy, a licence note is missing,
+      # or a card does not match its JSON schema.
+      - name: Licence audit and source schema checks
+        run: python -m pipeline audit
+
+      - name: Unit tests
+        run: python -m pytest -q

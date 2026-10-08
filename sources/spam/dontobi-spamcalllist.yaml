@@ -1,0 +1,11 @@
+id: dontobi-spamcalllist
+name: dontobi/SpamCalllist
+url: https://github.com/dontobi/SpamCalllist
+format: unknown
+licence: MIT                # code/repository licence
+redistribution: excluded
+level: COMMUNITY
+frequency: archived
+reason: >
+  Archived in March 2024 and superseded by PhoneBlock; the data is stale. Kept as a record only.
+verified: "2026-10-08"

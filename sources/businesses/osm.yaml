@@ -1,0 +1,33 @@
+# OpenStreetMap business packs. Regional extracts only: the Overpass API is never used (doc 04, doc 08).
+# Adding a region is a configuration change, not a code change. Large countries can list several
+# `extracts` (sub-regions); they are merged into ONE pack for the region and deduplicated together.
+source_id: osm
+name: OpenStreetMap
+licence: ODbL-1.0
+licence_url: https://opendatacommons.org/licenses/odbl/1-0/
+attribution: "© OpenStreetMap contributors"
+redistribution: package          # derived database published under ODbL (share-alike)
+max_alternatives: 3              # alternative names kept per number besides the best one
+
+# An element is kept when it has at least one phone key AND at least one business key
+# whose value maps to a category (see pipeline/categories.py).
+tags:
+  phone_keys: [phone, contact:phone, contact:mobile]
+  business_keys: [amenity, shop, office, craft, healthcare, tourism, leisure]
+
+regions:
+  - id: ES
+    country: ES
+    name: Spain
+    extracts:
+      - https://download.geofabrik.de/europe/spain-latest.osm.pbf
+  - id: DE
+    country: DE
+    name: Germany
+    extracts:
+      - https://download.geofabrik.de/europe/germany-latest.osm.pbf
+  - id: AT
+    country: AT
+    name: Austria
+    extracts:
+      - https://download.geofabrik.de/europe/austria-latest.osm.pbf

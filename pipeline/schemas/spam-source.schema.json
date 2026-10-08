@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sources/spam/*.yaml",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "url", "format", "licence", "redistribution", "level", "frequency"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "name": {"type": "string", "minLength": 1},
+    "url": {"type": "string", "pattern": "^https://"},
+    "format": {"enum": ["txt", "csv", "jsonl", "api", "unknown"]},
+    "licence": {"type": "string", "minLength": 1},
+    "licence_url": {"type": "string"},
+    "redistribution": {"enum": ["package", "direct-download", "excluded"]},
+    "level": {"enum": ["COMMUNITY", "RULE"]},
+    "frequency": {"enum": ["hourly", "daily", "weekly", "monthly", "continuous", "archived"]},
+    "reason": {"type": "string"},
+    "verified": {"type": "string"},
+    "country": {"type": "string", "pattern": "^[A-Z]{2}$"},
+    "region": {"type": "string", "pattern": "^([A-Z]{2}|GLOBAL)$"},
+    "attribution": {"type": "string"},
+    "options": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "number_column": {"type": ["integer", "string"]},
+        "label_column": {"type": ["integer", "string"]},
+        "category_column": {"type": ["integer", "string"]},
+        "delimiter": {"type": "string", "minLength": 1, "maxLength": 1},
+        "has_header": {"type": "boolean"},
+        "number_field": {"type": "string"},
+        "label_field": {"type": "string"},
+        "category_field": {"type": "string"}
+      }
+    }
+  },
+  "allOf": [
+    {"if": {"properties": {"redistribution": {"const": "package"}}},
+     "then": {"required": ["licence_url", "verified", "region", "attribution"]}},
+    {"if": {"properties": {"redistribution": {"const": "excluded"}}},
+     "then": {"required": ["reason"]}}
+  ]
+}
