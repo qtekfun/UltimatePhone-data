@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sqlite3
 import sys
 from pathlib import Path
@@ -36,6 +37,12 @@ def _check_sums(directory: Path) -> int:
     return n
 
 
+def fts_token(name: str) -> str:
+    """First word of a name as FTS5's unicode61 tokenizer sees it: "WS-Transporte" starts with the token "WS"."""
+    words = re.findall(r"[^\W_]+", name)
+    return words[0] if words else ""
+
+
 def _smoke_db(pack: dict, db_path: Path, known: dict[str, str]) -> str:
     db = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     try:
@@ -52,7 +59,7 @@ def _smoke_db(pack: dict, db_path: Path, known: dict[str, str]) -> str:
             row = db.execute("SELECT name FROM numbers WHERE e164 = ?", (e164,)).fetchone()
             if row is None:
                 raise PipelineError(f"{pack['id']}: known number {e164} not found")
-            token = "".join(c for c in row[0].split()[0] if c.isalnum())
+            token = fts_token(row[0])
             if token:
                 hit = db.execute(
                     "SELECT count(*) FROM numbers_fts WHERE numbers_fts MATCH ?", (f'"{token}"',)).fetchone()[0]
