@@ -1,0 +1,6 @@
+# sample list
++34 600 111 222	Fake survey calls
++34 931 234 567
++49 30 12345678 # Test entry
+not-a-number
++49900*

@@ -1,0 +1,14 @@
+id: phoneblock
+name: PhoneBlock
+url: https://github.com/haumacher/phoneblock
+format: api
+licence: unknown            # code is GPL-3.0; no data licence found (doc 08, verification 2026-10-08)
+redistribution: excluded
+level: COMMUNITY
+frequency: continuous
+reason: >
+  No data licence or redistribution grant found in the repository (README, COPYRIGHT, INTEGRATIONS.md).
+  Authenticated API use needs a per-user bearer token. Not packaged. An optional direct download from
+  the app may come later, only with the user's own token and only if the service terms allow it;
+  not enabled in v0.x.
+verified: "2026-10-08"

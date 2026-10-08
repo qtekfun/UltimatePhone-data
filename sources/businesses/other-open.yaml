@@ -1,0 +1,8 @@
+# Other open business sources (Wikidata, public-administration open data, open company registers, ...).
+#
+# The list is intentionally EMPTY. Every source added here needs a VERIFIED licence that allows
+# redistribution of a derived database, checked against the primary source (not a blog), plus the
+# date of the check. Without a clear licence the source is discarded. A source whose licence is
+# not compatible with ODbL share-alike must never be mixed into the same pack as OSM data.
+# The licence audit (`python -m pipeline audit`) fails when an entry lacks `licence` or `redistribution`.
+sources: []

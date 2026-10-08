@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="make_fixtures.py">
+  <node id="1" version="1" timestamp="2026-01-01T00:00:00Z" uid="1" user="t" changeset="1" lat="40.0" lon="-3.0">
+    <tag k="amenity" v="restaurant"/>
+    <tag k="name" v="Café Central"/>
+    <tag k="phone" v="+34 912 345 678; +34 913 456 789"/>
+    <tag k="website" v="https://example.org"/>
+    <tag k="opening_hours" v="Mo-Su 09:00-23:00"/>
+  </node>
+  <node id="2" version="1" timestamp="2026-01-01T00:00:00Z" uid="1" user="t" changeset="1" lat="40.0" lon="-3.0">
+    <tag k="shop" v="bakery"/>
+    <tag k="name" v="Panadería Sol"/>
+    <tag k="contact:phone" v="913456789"/>
+  </node>
+  <way id="3" version="1" timestamp="2026-01-01T00:00:00Z" uid="1" user="t" changeset="1">
+    <nd ref="1"/>
+    <nd ref="2"/>
+    <tag k="amenity" v="pharmacy"/>
+    <tag k="name" v="Farmacia Luna"/>
+    <tag k="phone" v="915550123, 918765432"/>
+  </way>
+  <node id="4" version="1" timestamp="2026-01-01T00:00:00Z" uid="1" user="t" changeset="1" lat="40.0" lon="-3.0">
+    <tag k="shop" v="supermarket"/>
+    <tag k="brand" v="SuperEjemplo"/>
+    <tag k="phone" v="+34 931 234 567"/>
+  </node>
+  <node id="5" version="1" timestamp="2026-01-01T00:00:00Z" uid="1" user="t" changeset="1" lat="40.0" lon="-3.0">
+    <tag k="amenity" v="bench"/>
+    <tag k="phone" v="+34 955 123 456"/>
+  </node>
+  <node id="6" version="1" timestamp="2026-01-01T00:00:00Z" uid="1" user="t" changeset="1" lat="40.0" lon="-3.0">
+    <tag k="shop" v="clothes"/>
+    <tag k="name" v="Moda X"/>
+    <tag k="phone" v="12345"/>
+  </node>
+  <node id="7" version="1" timestamp="2026-01-01T00:00:00Z" uid="1" user="t" changeset="1" lat="40.0" lon="-3.0">
+    <tag k="tourism" v="hotel"/>
+    <tag k="name" v="Hotel Mar"/>
+    <tag k="contact:mobile" v="612345678"/>
+  </node>
+  <node id="8" version="1" timestamp="2026-01-01T00:00:00Z" uid="1" user="t" changeset="1" lat="40.0" lon="-3.0">
+    <tag k="shop" v="florist"/>
+    <tag k="name" v="Flores Ana"/>
+  </node>
+  <node id="9" version="1" timestamp="2026-01-01T00:00:00Z" uid="1" user="t" changeset="1" lat="40.0" lon="-3.0">
+    <tag k="shop" v="vacant"/>
+    <tag k="name" v="Closed"/>
+    <tag k="phone" v="+34 600 111 222"/>
+  </node>
+  <relation id="10" version="1" timestamp="2026-01-01T00:00:00Z" uid="1" user="t" changeset="1">
+    <member type="node" ref="1" role=""/>
+    <tag k="tourism" v="museum"/>
+    <tag k="name" v="Museo Ejemplo"/>
+    <tag k="phone" v="+34 955 123 456"/>
+  </relation>
+  <node id="11" version="1" timestamp="2026-01-01T00:00:00Z" uid="1" user="t" changeset="1" lat="40.0" lon="-3.0">
+    <tag k="office" v="lawyer"/>
+    <tag k="phone" v="+34 600 111 222"/>
+  </node>
+  <node id="12" version="1" timestamp="2026-01-01T00:00:00Z" uid="1" user="t" changeset="1" lat="40.0" lon="-3.0">
+    <tag k="name" v="Just a node"/>
+    <tag k="highway" v="bus_stop"/>
+  </node>
+</osm>
