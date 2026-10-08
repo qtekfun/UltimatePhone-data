@@ -29,7 +29,7 @@ not rebuilt in that run are copied from the previous release, so no URL in a man
 
 - `numbers(e164 TEXT PRIMARY KEY, name, brand, category, osm_id, alt_names)`: `alt_names` is a JSON array with up to
   `max_alternatives` other names for the same number (best-quality name wins, ties by lowest OSM id).
-- `numbers_fts`: FTS5 external-content table over `numbers.name` (`unicode61 remove_diacritics 2`, so "cafe" finds
+- `numbers_fts`: FTS4 external-content table (Android's SQLite has no FTS5) over `numbers.name` (`unicode61 remove_diacritics=1`, so "cafe" finds
   "Café"). Join with `numbers` on `rowid`.
 - `meta(key, value)`: `packId, schema, type, version, region, country, generatedAt, license, licenseUrl, attribution,
   sourceUrls, entries, entriesWithAlternatives, entriesByCategory, elementsBusiness, elementsWithPhone,

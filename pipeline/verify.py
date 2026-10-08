@@ -38,7 +38,7 @@ def _check_sums(directory: Path) -> int:
 
 
 def fts_token(name: str) -> str:
-    """First word of a name as FTS5's unicode61 tokenizer sees it: "WS-Transporte" starts with the token "WS"."""
+    """First word of a name as the FTS unicode61 tokenizer sees it: "WS-Transporte" starts with the token "WS"."""
     words = re.findall(r"[^\W_]+", name)
     return words[0] if words else ""
 

@@ -51,6 +51,21 @@ def test_fts_query_and_diacritics(tmp_path):
     assert db.execute("SELECT count(*) FROM numbers_fts WHERE numbers_fts MATCH 'farmacia'").fetchone()[0] == 2   # one row per number
 
 
+def test_index_is_fts4_and_answers_the_apps_prefix_queries(tmp_path):
+    """Android's platform SQLite has no fts5 module; the app queries `abc* OR abd*` style prefix expressions."""
+    _, db = build(tmp_path)
+    sql = db.execute("SELECT sql FROM sqlite_master WHERE name = 'numbers_fts'").fetchone()[0].lower()
+    assert "fts4" in sql and "fts5" not in sql
+    rows = db.execute("SELECT n.e164 FROM numbers_fts JOIN numbers n ON n.rowid = numbers_fts.rowid "
+                      "WHERE numbers_fts MATCH ?", ("far* OR cad*",)).fetchall()
+    assert rows, "a prefix expression like the app's must find the fixture pharmacies"
+
+
+def test_pack_versions_carry_the_format_revision():
+    from pipeline import common
+    assert common.date_version().endswith(f".{common.FORMAT_REVISION}")
+
+
 def test_schema_and_xz_parameters(tmp_path):
     entry, db = build(tmp_path)
     cols = [r[1] for r in db.execute("PRAGMA table_info(numbers)")]
