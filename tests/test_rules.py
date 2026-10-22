@@ -30,3 +30,10 @@ def test_invalid_source_yaml_fails(tmp_path):
     (tmp_path / "xx.yaml").write_text("country: XX\nrules: []\n")
     with pytest.raises(PipelineError):
         rules.load_sources(tmp_path)
+
+
+def test_rules_accept_the_default_pack_version(tmp_path):
+    # The CLI default carries the format revision suffix (YYYY.MM.DD.N); the rules schema must accept it.
+    version = common.date_version()
+    rules.build(tmp_path, version)
+    assert json.loads((tmp_path / "rules-es.json").read_text())["version"] == version
