@@ -90,5 +90,5 @@ jobs:
           {
             echo "### Spam and rules build"
             echo "Result: ${{ job.status }}; changed: ${{ steps.assemble.outputs.changed }}"
-            [ -f dist/release/manifest.json ] && { echo '```'; cat dist/release/manifest.json; echo '```'; }
+            if [ -f dist/release/manifest.json ]; then echo '```'; cat dist/release/manifest.json; echo '```'; fi
           } >> "$GITHUB_STEP_SUMMARY"

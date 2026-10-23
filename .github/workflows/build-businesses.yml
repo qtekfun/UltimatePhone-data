@@ -109,5 +109,5 @@ jobs:
             echo "### Businesses build"
             echo "Regions: $REGIONS"
             echo "Result: ${{ job.status }}"
-            [ -f dist/release/manifest.json ] && { echo '```'; cat dist/release/manifest.json; echo '```'; }
+            if [ -f dist/release/manifest.json ]; then echo '```'; cat dist/release/manifest.json; echo '```'; fi
           } >> "$GITHUB_STEP_SUMMARY"
